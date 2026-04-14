@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Benefit Computer – Quotation Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="brand-icon">🖥️</span>
+      <div>
+        <h1>Benefit Computer</h1>
+        <p>Quotation Generator</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="form-card">
+
+    <!-- ── QUOTATION META ── -->
+    <section class="section">
+      <h2 class="section-title">Quotation Details</h2>
+      <div class="grid-2">
+        <div class="field">
+          <label for="quoteNo">Quotation Number</label>
+          <input type="text" id="quoteNo" placeholder="e.g. BC-2024-001" />
+        </div>
+        <div class="field">
+          <label for="quoteDate">Date</label>
+          <input type="date" id="quoteDate" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CUSTOMER INFO ── -->
+    <section class="section">
+      <h2 class="section-title">Customer Information</h2>
+      <div class="grid-2">
+        <div class="field">
+          <label for="custName">Customer Name <span class="req">*</span></label>
+          <input type="text" id="custName" placeholder="Full name" />
+        </div>
+        <div class="field">
+          <label for="custCompany">Company Name</label>
+          <input type="text" id="custCompany" placeholder="Company (optional)" />
+        </div>
+        <div class="field">
+          <label for="custMobile">Mobile Number <span class="req">*</span></label>
+          <input type="tel" id="custMobile" placeholder="+91 XXXXX XXXXX" />
+        </div>
+        <div class="field">
+          <label for="custEmail">Email Address</label>
+          <input type="email" id="custEmail" placeholder="customer@email.com" />
+        </div>
+        <div class="field full">
+          <label for="custAddress">Address</label>
+          <textarea id="custAddress" rows="2" placeholder="Full address"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── GST MODE ── -->
+    <section class="section">
+      <h2 class="section-title">GST / Tax Mode</h2>
+      <div class="field" style="max-width:380px">
+        <label for="gstMode">Select GST Treatment</label>
+        <select id="gstMode" onchange="updateTableHeaders()">
+          <option value="none">No GST (prices as entered)</option>
+          <option value="included">GST Included @ 18% (price includes tax)</option>
+          <option value="extra">Show GST @ 18% (add tax on top of price)</option>
+        </select>
+      </div>
+      <p class="gst-note" id="gstNote">Prices will be used as-is with no GST calculation.</p>
+    </section>
+
+    <!-- ── ITEMS TABLE ── -->
+    <section class="section">
+      <h2 class="section-title">Items / Services</h2>
+      <div class="table-wrap">
+        <table id="itemTable">
+          <thead>
+            <tr>
+              <th class="col-sno">#</th>
+              <th class="col-desc">Description</th>
+              <th class="col-qty">Qty</th>
+              <th class="col-price" id="th-price">Unit Price ()</th>
+              <th class="col-gst" id="th-gst" style="display:none">GST (18%)</th>
+              <th class="col-amount">Amount ()</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="itemBody">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-add-row" onclick="addRow()">+ Add Item</button>
+    </section>
+
+    <!-- ── TOTALS ── -->
+    <section class="section totals-section">
+      <div class="totals-box">
+        <div class="total-row" id="subtotalRow">
+          <span>Subtotal</span>
+          <span id="subtotalVal"> 0.00</span>
+        </div>
+        <div class="total-row" id="gstRow" style="display:none">
+          <span id="gstLabel">GST (18%)</span>
+          <span id="gstVal"> 0.00</span>
+        </div>
+        <div class="total-row grand">
+          <span>Total Amount</span>
+          <span id="grandVal"> 0.00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── NOTES ── -->
+    <section class="section">
+      <h2 class="section-title">Additional Notes <span class="opt">(optional)</span></h2>
+      <div class="field">
+        <textarea id="notes" rows="3" placeholder="Any special notes for this quotation…"></textarea>
+      </div>
+    </section>
+
+    <!-- ── ACTIONS ── -->
+    <div class="actions">
+      <button class="btn-reset" onclick="resetForm()">↺ Reset</button>
+      <button class="btn-generate" onclick="generatePDF()">⬇ Download PDF</button>
+    </div>
+
+  </main>
+
+  <footer class="app-footer">
+    Benefit Computer · Shop 122-123, Super Market, Budh Bazar, Moradabad
+  </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
