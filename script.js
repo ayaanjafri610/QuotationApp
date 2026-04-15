@@ -11,9 +11,9 @@ const COMPANY = {
   bank: {
     name:    "IDBI Bank",
     type:    "Current Account",
-    account: "000000000123",
-    ifsc:    "IBKL00009",
-    branch:  "LG Showroom, Moradabad"
+    account: "1839102000004572",
+    ifsc:    "IBKL0001839",
+    branch:  "NEAR LG Showroom, OPP SATYAM CI"
   },
   tc: [
     "This quotation is valid for 15 days from the date of issue.",
