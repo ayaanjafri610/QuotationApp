@@ -469,7 +469,58 @@ function generatePDF() {
 
   // ── Save
   const fileName = `Quotation_${quoteNo || "BC"}_${(document.getElementById("quoteDate").value || "").replace(/-/g, "")}.pdf`;
-  doc.save(fileName);
+  // doc.save(fileName);
+
+
+  // If called for sharing → return blob
+if (window._shareMode) {
+  window._shareMode = false;
+  return doc.output("blob");
+}
+
+// Default → download
+doc.save(fileName);
+
+}
+
+
+async function sharePDF() {
+  const custName = document.getElementById("custName").value.trim();
+
+  if (!custName) {
+    alert("Please enter Customer Name");
+    return;
+  }
+
+  try {
+    // 👉 Enable share mode
+    window._shareMode = true;
+
+    // 👉 Get PDF as blob using SAME function
+    const pdfBlob = generatePDF();
+
+    const file = new File([pdfBlob], "Quotation.pdf", {
+      type: "application/pdf"
+    });
+
+    // ✅ Native Share
+    if (navigator.share && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: "Quotation - Benefit Computer",
+        text: "Please find your quotation attached.",
+        files: [file]
+      });
+    } else {
+      // Fallback → download
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(pdfBlob);
+      link.download = "Quotation.pdf";
+      link.click();
+    }
+
+  } catch (err) {
+    console.log("Sharing cancelled or failed", err);
+  }
 }
 
 // ── HELPERS ────────────────────────────────────
