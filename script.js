@@ -493,33 +493,36 @@ async function sharePDF() {
   }
 
   try {
-    // 👉 Enable share mode
-    window._shareMode = true;
+    // 👉 Show loader (optional but recommended)
+    alert("Preparing PDF...");
 
-    // 👉 Get PDF as blob using SAME function
+    // 👉 Generate blob using your existing function
+    window._shareMode = true;
     const pdfBlob = generatePDF();
 
     const file = new File([pdfBlob], "Quotation.pdf", {
       type: "application/pdf"
     });
 
-    // ✅ Native Share
-    if (navigator.share && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        title: "Quotation - Benefit Computer",
-        text: "Please find your quotation attached.",
-        files: [file]
-      });
-    } else {
-      // Fallback → download
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(pdfBlob);
-      link.download = "Quotation.pdf";
-      link.click();
-    }
+    // 👉 Small delay helps mobile browsers
+    setTimeout(async () => {
+      if (navigator.share && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: "Quotation",
+          text: "Please find your quotation attached.",
+          files: [file]
+        });
+      } else {
+        // fallback
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(pdfBlob);
+        link.download = "Quotation.pdf";
+        link.click();
+      }
+    }, 300); // 🔥 important delay
 
   } catch (err) {
-    console.log("Sharing cancelled or failed", err);
+    console.log("Error sharing:", err);
   }
 }
 
